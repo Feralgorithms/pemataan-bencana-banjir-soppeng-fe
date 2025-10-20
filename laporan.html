@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="Ferdy" />
+  <meta name="description"
+    content="Laporkan titik banjir di Kabupaten Soppeng secara cepat dan akurat melalui peta interaktif." />
+  <meta name="keywords" content="banjir, soppeng, laporan banjir, peta banjir, mitigasi bencana, Ferdy" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#007bff" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <title>Lapor Banjir Soppeng</title>
+
+  <link rel="stylesheet" href="/css/fontawesome-all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/leaflet/dist/leaflet.css">
+  <script src="/leaflet/dist/leaflet.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      padding: 0 0.75rem;
+      margin-top: 80px;
+    }
+
+    #map {
+      height: 380px;
+      border-radius: 12px;
+      margin-bottom: 0.6rem;
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    .card {
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    .btn-primary {
+      font-weight: 500;
+      padding: 0.6rem;
+    }
+
+    @media (max-width: 576px) {
+      #map {
+        height: 300px;
+      }
+
+      .btn-primary {
+        font-size: 0.95rem;
+      }
+    }
+
+    .alert img {
+      width: 100%;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body class="p-2">
+
+  <div class="container card bg-light py-2">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 class="mb-0 text-center flex-grow-1">Laporkan Titik Banjir</h2>
+      <a href="index.html" class="btn btn-outline-secondary btn-sm ms-3">
+        <i class="fas fa-arrow-left me-1"></i> Kembali
+      </a>
+    </div>
+    <div id="map"></div>
+
+    <form id="laporanForm" class="card p-3 shadow-sm">
+      <div class="mb-3">
+        <label for="tinggi_air" class="form-label">Tinggi Air (cm)</label>
+        <input type="number" id="tinggi_air" class="form-control" required placeholder="Contoh: 80">
+      </div>
+
+      <div class="mb-3">
+        <label for="deskripsi" class="form-label">Deskripsi</label>
+        <textarea id="deskripsi" class="form-control" rows="3" required
+          placeholder="Ceritakan kondisi banjir di lokasi..."></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label for="gambar" class="form-label">Upload Gambar</label>
+        <input type="file" id="gambar" class="form-control" accept="image/*" required>
+        <div class="form-text">*Ukuran File Maximum 2MB</div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Koordinat Lokasi</label>
+        <div class="input-group">
+          <input type="text" id="latitude" class="form-control" placeholder="Latitude" readonly>
+          <input type="text" id="longitude" class="form-control" placeholder="Longitude" readonly>
+        </div>
+        <div class="form-text">Klik pada peta untuk memilih titik lokasi banjir</div>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 mt-2">Kirim Laporan</button>
+    </form>
+
+    <div id="hasil" class="mt-4"></div>
+  </div>
+
+  <script src="/js/tambahLaporan.js"></script>
+</body>
+
+</html>
