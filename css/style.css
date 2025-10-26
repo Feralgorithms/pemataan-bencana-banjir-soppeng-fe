@@ -4,6 +4,19 @@ body {
   background: #f8f9fa;
 }
 
+.color-global {
+  /* 1. Terapkan gradien sebagai gambar latar belakang */
+  background: linear-gradient(135deg, #0022ffff, rgb(64, 88, 246));
+
+  /* 2. Klip (potong) latar belakang hanya sebatas area teks */
+  -webkit-background-clip: text; /* Untuk dukungan browser berbasis WebKit */
+  background-clip: text;
+
+  /* 3. Buat warna teks transparan agar latar belakang terlihat */
+  -webkit-text-fill-color: transparent; /* Untuk dukungan browser berbasis WebKit */
+  text-fill-color: transparent;
+}
+
 #map {
   height: 100vh;
   width: 100%;
