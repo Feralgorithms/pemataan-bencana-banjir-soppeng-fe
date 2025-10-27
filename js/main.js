@@ -47,7 +47,7 @@ const topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
 });
 
 // basemap default
-cartoLight.addTo(map);
+osm.addTo(map);
 
 
 const baseMaps = {
@@ -124,33 +124,12 @@ document.getElementById('selectKecamatan').addEventListener('change', async (e) 
     }
 
 
-    // // Ambil data desa
-    // const desaData = await getDesaByKecamatan(idKecamatan);
-    // if (desaData && desaData.features) {
-    //   desaLayer = L.geoJSON(desaData, {
-    //     style: {
-    //       color: '#ffffffff',       // hijau tua (batas)
-    //       fillColor: '#00ff26',   // hijau muda (isi)
-    //       weight: 1.2,
-    //       fillOpacity: 1
-    //     },
-    //     onEachFeature: (feature, layer) => {
-    //       const props = feature.properties;
-    //       layer.bindPopup(`
-    //         <b>${props.nama_desa}</b><br>
-    //         Luas: ${props.luas || '-'}<br>
-    //         Kode: ${props.kode_desa}
-    //       `);
-    //     }
-    //   })
-    // }
-
     // Ambil data desa
 const desaData = await getDesaByKecamatan(idKecamatan);
+console.log(desaData)
 if (desaData && desaData.features) {
   desaLayer = L.geoJSON(desaData, {
     style: function (feature) {
-      // Warna default peta batas desa
       return {
         color: '#ffffffff',  
         fillColor: '#00ff26',
@@ -187,10 +166,11 @@ if (desaData && desaData.features) {
     
       layer.bindPopup(`
         <b>${props.nama_desa}</b><br>
-        Kode Desa: ${props.kode_desa || '-'}<br>
         Luas: ${props.luas || '-'} Ha<br>
-        ID Kecamatan: ${props.id_kecamatan || '-'}<br>
+        Jumlah Penduduk: ${props.jumlah_penduduk || '-'}<br>
         Risiko Banjir: ${risikoBox}
+        Jumlah Laporan: ${props.jumlah_laporan}
+        Rata Ketinggian Air: ${props.rata_tinggi_air}
       `);
     }
   });
