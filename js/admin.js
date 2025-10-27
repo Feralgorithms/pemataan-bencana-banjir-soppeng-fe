@@ -377,13 +377,20 @@ async function fetchRisiko() {
     const json = await res.json();
     const tbody = document.querySelector('#tableRisiko tbody');
     tbody.innerHTML = '';
+
     json.data.forEach(r => {
+      const kategoriClass = {
+        'Rendah': 'badge-rendah',
+        'Sedang': 'badge-sedang',
+        'Tinggi': 'badge-tinggi'
+      }[r.kategori] || 'badge bg-secondary';
+
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td>${r.id}</td>
         <td>${r.nama_desa}</td>
         <td>${r.rata_tinggi_air}</td>
-        <td>${r.kategori}</td>
+        <td><span class="badge ${kategoriClass}">${r.kategori}</span></td>
         <td>${r.jumlah_laporan}</td>
         <td>${r.terakhir_diperbarui}</td>
         <td>
@@ -392,10 +399,12 @@ async function fetchRisiko() {
       `;
       tbody.appendChild(tr);
     });
+
   } catch (err) {
     console.error(err);
   }
 }
+
 
 async function editRisiko(id) {
   const getData = await fetch(`${API_BASE}/risiko/${id}`);

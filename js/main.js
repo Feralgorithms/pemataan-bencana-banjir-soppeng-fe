@@ -1,15 +1,5 @@
 import { getKecamatan, getDesaByKecamatan, getSungaiByKecamatan, getKecamatanById, getLaporanBanjir } from './api.js';
 
-// // Inisialisasi Leaflet Map
-// const map = L.map('map',{ zoomControl: false}).setView([-4.35, 119.87], 10);
-
-// L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-//   attribution: '&copy; OpenStreetMap contributors'
-// }).addTo(map);
-
-// L.control.zoom({
-//   position: 'bottomright' 
-// }).addTo(map);
 
 // Inisialisasi Leaflet Map
 const map = L.map('map', { zoomControl: false }).setView([-4.35, 119.87], 10);
@@ -115,7 +105,7 @@ document.getElementById('selectKecamatan').addEventListener('change', async (e) 
           const props = feature.properties;
           layer.bindPopup(`
             <b>${props.nama_kecamatan}</b><br>
-            Luas: ${props.luas || '-'}KM<sup>2</sup><br>
+            Luas: ${props.luas || '-'}Km<sup>2</sup><br>
             Kode: ${props.kode_kec}
           `);
         }
@@ -165,12 +155,14 @@ if (desaData && desaData.features) {
 
     
       layer.bindPopup(`
+        <div class="popup-blur">
         <b>${props.nama_desa}</b><br>
         Luas: ${props.luas || '-'} Ha<br>
         Jumlah Penduduk: ${props.jumlah_penduduk || '-'}<br>
-        Risiko Banjir: ${risikoBox}
-        Jumlah Laporan: ${props.jumlah_laporan}
-        Rata Ketinggian Air: ${props.rata_tinggi_air}
+        Risiko Banjir: ${risikoBox}<br>
+        Jumlah Laporan: ${props.jumlah_laporan}<br>
+        Rata Ketinggian Air: ${props.rata_tinggi_air}<br>
+        </div>
       `);
     }
   });
