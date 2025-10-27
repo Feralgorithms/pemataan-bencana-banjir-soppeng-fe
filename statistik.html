@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Statistik PBB - Soppeng</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+</head>
+
+<body class="bg-blue-50 min-h-screen p-8">
+
+  <!-- Header -->
+  <div class="text-center my-6">
+    <h1 class="text-3xl font-bold text-blue-700">Statistik PBB</h1>
+    <p class="text-gray-700">Kabupaten Soppeng</p>
+  </div>
+
+
+  <div class="text-center mb-6">
+    <a href="index.html" class="px-5 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition">
+      Kembali ke Beranda
+    </a>
+  </div>
+
+  <!-- Cards Statistik -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6" id="statCards">
+    <div class="p-4 bg-white rounded-xl shadow text-center">
+      <p class="text-sm text-gray-500">Kecamatan</p>
+      <h2 id="totalKecamatan" class="text-2xl font-bold text-blue-700">0</h2>
+    </div>
+
+    <div class="p-4 bg-white rounded-xl shadow text-center">
+      <p class="text-sm text-gray-500">Desa</p>
+      <h2 id="totalDesa" class="text-2xl font-bold text-blue-700">0</h2>
+    </div>
+
+    <div class="p-4 bg-white rounded-xl shadow text-center">
+      <p class="text-sm text-gray-500">Total Laporan</p>
+      <h2 id="totalLaporan" class="text-2xl font-bold text-blue-700">0</h2>
+    </div>
+
+    <div class="p-4 bg-white rounded-xl shadow text-center">
+      <p class="text-sm text-gray-500">Risiko Tercatat</p>
+      <h2 id="totalRisiko" class="text-2xl font-bold text-blue-700">0</h2>
+    </div>
+  </div>
+
+  <!-- Chart Section -->
+  <div class="grid md:grid-cols-2 gap-6">
+    <!-- Chart Status -->
+    <div class="bg-white p-4 rounded-xl shadow">
+      <h3 class="text-center text-blue-700 font-semibold mb-2">Status Verifikasi Laporan</h3>
+      <div id="chartStatus"></div>
+    </div>
+
+    <!-- Chart Risiko -->
+    <div class="bg-white p-4 rounded-xl shadow">
+      <h3 class="text-center text-blue-700 font-semibold mb-2">Kategori Risiko Desa</h3>
+      <div id="chartRisiko"></div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = "https://api-pemetaan-bencana-banjir-soppeng-prod.vercel.app";
+
+    async function loadStats() {
+      const res = await fetch(`${API_BASE}/statistik`);
+      const { data } = await res.json();
+
+      document.getElementById("totalKecamatan").innerText = data.totalKecamatan;
+      document.getElementById("totalDesa").innerText = data.totalDesa;
+      document.getElementById("totalLaporan").innerText = data.totalLaporan;
+      document.getElementById("totalRisiko").innerText =
+        Object.values(data.kategoriRisikoCount).reduce((a, b) => a + b, 0);
+
+      // Chart Status
+      const statusOptions = {
+        chart: { type: 'donut' },
+        series: Object.values(data.statusCounts),
+        labels: Object.keys(data.statusCounts),
+        colors: ['#eab308', '#22c55e', '#ef4444']
+      };
+      new ApexCharts(document.querySelector("#chartStatus"), statusOptions).render();
+
+      // Chart Risiko
+      const kategoriKeys = Object.keys(data.kategoriRisikoCount);
+      const kategoriValues = Object.values(data.kategoriRisikoCount);
+      const warnaRisiko = kategoriKeys.map(k => {
+        if (k === "Rendah") return "#22c55e";
+        if (k === "Sedang") return "#eab308";
+        if (k === "Tinggi") return "#ef4444";
+        return "#64748b";
+      });
+
+      const risikoOptions = {
+        chart: { type: 'bar' },
+        series: [{
+          name: "Jumlah Desa",
+          data: kategoriValues
+        }],
+        xaxis: {
+          categories: kategoriKeys,
+        },
+        yaxis: {
+          labels: {
+            formatter: function (value) {
+              return Math.round(value);
+            }
+          }
+        },
+
+        colors: warnaRisiko,
+        plotOptions: {
+          bar: {
+            distributed: true,
+            borderRadius: 6
+          }
+        },
+        dataLabels: {
+          enabled: true
+        }
+      };
+
+      new ApexCharts(document.querySelector("#chartRisiko"), risikoOptions).render();
+
+    }
+
+    loadStats();
+  </script>
+
+</body>
+
+</html>
