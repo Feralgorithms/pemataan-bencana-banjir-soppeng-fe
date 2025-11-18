@@ -50,10 +50,9 @@
 
 <body class="d-flex justify-content-center align-items-center">
 
-  <!-- Overlay -->
+
   <div class="bg-overlay"></div>
 
-  <!-- Login Card -->
   <div class="card shadow p-4 login-card">
     <h3 class="text-center mb-4 text-light">Admin Login</h3>
 
@@ -73,8 +72,17 @@
 
   <script>
     const baseurl = 'https://api-pemetaan-bencana-banjir-soppeng-prod.vercel.app';
-    if (localStorage.getItem("token_secret")) {
-      window.location.href = "admin.html";
+    if (localStorage.getItem("token_secret") && localStorage.getItem("token_exp")) {
+      const now = Date.now();
+      const exp = localStorage.getItem("token_exp");
+
+      if (now < exp) {
+        window.location.href = "admin.html";
+
+      } else {
+        localStorage.removeItem("token_secret");
+        localStorage.removeItem("token_exp");
+      }
     }
 
     document.getElementById("loginForm").addEventListener("submit", async (e) => {
@@ -93,10 +101,12 @@
         const data = await res.json();
 
         if (data.token) {
+          const payload = JSON.parse(atob(data.token.split(".")[1]));
+
           localStorage.setItem("token_secret", data.token);
+          localStorage.setItem("token_exp", payload.exp * 1000);
+
           window.location.href = "admin.html";
-        } else {
-          document.getElementById("message").innerText = data.message || "Login gagal";
         }
 
       } catch (error) {
