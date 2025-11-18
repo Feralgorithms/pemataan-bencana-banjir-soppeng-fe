@@ -107,6 +107,8 @@
           localStorage.setItem("token_exp", payload.exp * 1000);
 
           window.location.href = "admin.html";
+        } else {
+          document.getElementById("message").innerText = data.message || "Login gagal";
         }
 
       } catch (error) {
